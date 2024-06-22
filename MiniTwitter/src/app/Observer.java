@@ -1,0 +1,6 @@
+package MiniTwitter.src.app;
+
+public interface Observer {
+    
+    public void update(Subject subject);
+}
