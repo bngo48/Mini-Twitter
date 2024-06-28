@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,6 +37,7 @@ public class UserViewPanel extends ControlPanel {
     private JScrollPane newsScrollPane;
     private JButton followUserButton;
     private JButton postTweetButton;
+    private JLabel createTimeLabel;
     private Subject user;
     private Map<String, Observer> allUsers;
     private Map<String, JPanel> openPanels;
@@ -56,6 +58,7 @@ public class UserViewPanel extends ControlPanel {
         addComponent(frame, tweetMsgScrollPane, 0, 2, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(frame, postTweetButton, 1, 2, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(frame, newsScrollPane, 0, 3, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+        addComponent(frame, createTimeLabel, 0, 4, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
     }
 
     private void initializeComponents() {
@@ -85,6 +88,8 @@ public class UserViewPanel extends ControlPanel {
         formatTextArea(newsTextArea);
         newsScrollPane = new JScrollPane(newsTextArea);
         newsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        createTimeLabel = new JLabel("Creation Time: " + ((SingleUser) user).getCreationTime());
 
         updateCurrentFollowingTextArea();
         updateNewsFeedTextArea();

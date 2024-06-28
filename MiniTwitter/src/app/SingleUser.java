@@ -15,6 +15,7 @@ public class SingleUser extends User implements Subject {
     private List<String> newsFeed;
     private String latestMsg;
     private int positiveMsgs;
+    private long createTime;
 
     public SingleUser(String id) {
         super(id);
@@ -22,6 +23,7 @@ public class SingleUser extends User implements Subject {
         followers.put(this.getID(), this);
         followings = new HashMap<String, Subject>();
         newsFeed = new ArrayList<String>();
+        createTime = System.currentTimeMillis();
     }
 
     public Map<String, Observer> getFollowers() {
@@ -42,6 +44,10 @@ public class SingleUser extends User implements Subject {
 
     public int getPositiveMessageCount() {
         return positiveMsgs;
+    }
+
+    public long getCreationTime() {
+        return createTime;
     }
 
     public void sendMessage(String msg) {
@@ -86,7 +92,7 @@ public class SingleUser extends User implements Subject {
     }
 
     private void addFollower(Observer user) {
-        this.getFollowers().put(((User) user) .getID(), user);
+        this.getFollowers().put(((User) user).getID(), user);
         ((SingleUser) user).addUserToFollow(this);
     }
 
