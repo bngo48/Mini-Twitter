@@ -199,7 +199,6 @@ public class ShowInfoPanel extends ControlPanel {
 
                 VerifyIDVisitor visitor = new VerifyIDVisitor();
                 ((User) root).accept(visitor);
-                // visitor.checkUnique(); // not actually necessary
 
                 if (visitor.verifyID()) {
                     InfoDialogBox popUp = new InfoDialogBox("ID Validation", "All User/Group IDs are valid.",
