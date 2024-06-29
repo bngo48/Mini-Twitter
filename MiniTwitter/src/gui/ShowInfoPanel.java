@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.sound.midi.MidiDevice.Info;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -11,16 +12,21 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import MiniTwitter.src.app.User;
+import MiniTwitter.src.app.SingleUser;
 import MiniTwitter.src.visitor.GroupTotalVisitor;
+import MiniTwitter.src.visitor.LastUpdatedUserVisitor;
 import MiniTwitter.src.visitor.MsgTotalVisitor;
 import MiniTwitter.src.visitor.PositiveTotalVisitor;
 import MiniTwitter.src.visitor.UserTotalVisitor;
+import MiniTwitter.src.visitor.VerifyIDVisitor;
 
 public class ShowInfoPanel extends ControlPanel {
     private JButton userTotalButton;
     private JButton groupTotalButton;
     private JButton msgTotalButton;
     private JButton positivePercentButton;
+    private JButton lastUpdatedUserButton;
+    private JButton verifyIDButton;
     private JPanel treePanel;
 
     public ShowInfoPanel(JPanel treePanel) {
@@ -35,6 +41,8 @@ public class ShowInfoPanel extends ControlPanel {
         addComponent(this, groupTotalButton, 1, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(this, msgTotalButton, 0, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(this, positivePercentButton, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+        addComponent(this, verifyIDButton, 0, 2, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+        addComponent(this, lastUpdatedUserButton, 1, 2, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
     }
 
     private void initializeComponents() {
@@ -49,6 +57,12 @@ public class ShowInfoPanel extends ControlPanel {
 
         positivePercentButton = new JButton("Show Positive Percentage");
         initializePositivePercentageButtonActionListener();
+
+        verifyIDButton = new JButton("Verify User IDs");
+        initializeVerifyIDButtonActionListener();
+
+        lastUpdatedUserButton = new JButton("Find Last Updated User");
+        initializeLastUpdatedUserButtonActionListener();
     }
 
     private DefaultMutableTreeNode getSelectedNode() {
@@ -151,6 +165,51 @@ public class ShowInfoPanel extends ControlPanel {
 
                 InfoDialogBox popUp = new InfoDialogBox(((User) selectedNode).getID() + " information",
                         message, JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+    }
+    
+    private void initializeLastUpdatedUserButtonActionListener() {
+        lastUpdatedUserButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // start from the root
+                DefaultMutableTreeNode root = (DefaultMutableTreeNode) ((TreePanel) treePanel).getRoot();
+
+                LastUpdatedUserVisitor visitor = new LastUpdatedUserVisitor();
+                ((User) root).accept(visitor);
+                SingleUser lastUpdatedUser = visitor.getLastUpdatedUser();
+
+                String message = "Last Updated User: " + lastUpdatedUser.getID();
+
+                InfoDialogBox popUp = new InfoDialogBox("Last Updated User", message, 
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+    }
+
+    private void initializeVerifyIDButtonActionListener() {
+        verifyIDButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // start from root
+                DefaultMutableTreeNode root = (DefaultMutableTreeNode) ((TreePanel) treePanel).getRoot();
+
+                VerifyIDVisitor visitor = new VerifyIDVisitor();
+                ((User) root).accept(visitor);
+                // visitor.checkUnique(); // not actually necessary
+
+                if (visitor.verifyID()) {
+                    InfoDialogBox popUp = new InfoDialogBox("ID Validation", "All User/Group IDs are valid.",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    String message = "The following IDs are invalid or duplicate: " + visitor.getInvalidID();
+
+                    InfoDialogBox popUp = new InfoDialogBox("ID Validation", message, 
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         });
     }

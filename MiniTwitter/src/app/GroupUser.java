@@ -8,11 +8,13 @@ import MiniTwitter.src.visitor.Visitor;
 public class GroupUser extends User {
     private Map<String, User> groupUsers;
     private long createTime;
+    private long lastUpdatedTime;
 
     public GroupUser(String id) {
         super(id);
         groupUsers = new HashMap<String, User>();
         createTime = System.currentTimeMillis();
+        lastUpdatedTime = createTime;
     }
 
     public Map<String, User> getGroupUsers() {
@@ -65,6 +67,10 @@ public class GroupUser extends User {
 
     public long getCreationTime() {
         return createTime;
+    }
+
+    public long getLastUpdatedTime() {
+        return lastUpdatedTime;
     }
 
     public void update(Subject subject) {

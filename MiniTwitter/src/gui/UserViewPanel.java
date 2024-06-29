@@ -38,6 +38,7 @@ public class UserViewPanel extends ControlPanel {
     private JButton followUserButton;
     private JButton postTweetButton;
     private JLabel createTimeLabel;
+    private JLabel lastUpdatedTimeLabel;
     private Subject user;
     private Map<String, Observer> allUsers;
     private Map<String, JPanel> openPanels;
@@ -59,6 +60,7 @@ public class UserViewPanel extends ControlPanel {
         addComponent(frame, postTweetButton, 1, 2, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(frame, newsScrollPane, 0, 3, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
         addComponent(frame, createTimeLabel, 0, 4, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+        addComponent(frame, lastUpdatedTimeLabel, 0, 5, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
     }
 
     private void initializeComponents() {
@@ -90,6 +92,7 @@ public class UserViewPanel extends ControlPanel {
         newsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         createTimeLabel = new JLabel("Creation Time: " + ((SingleUser) user).getCreationTime());
+        lastUpdatedTimeLabel = new JLabel("Last Updated at: " + ((SingleUser) user).getLastUpdatedTime());
 
         updateCurrentFollowingTextArea();
         updateNewsFeedTextArea();

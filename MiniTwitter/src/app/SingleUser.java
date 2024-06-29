@@ -16,6 +16,7 @@ public class SingleUser extends User implements Subject {
     private String latestMsg;
     private int positiveMsgs;
     private long createTime;
+    private long lastUpdatedTime;
 
     public SingleUser(String id) {
         super(id);
@@ -24,6 +25,7 @@ public class SingleUser extends User implements Subject {
         followings = new HashMap<String, Subject>();
         newsFeed = new ArrayList<String>();
         createTime = System.currentTimeMillis();
+        lastUpdatedTime = createTime;
     }
 
     public Map<String, Observer> getFollowers() {
@@ -50,6 +52,14 @@ public class SingleUser extends User implements Subject {
         return createTime;
     }
 
+    public long getLastUpdatedTime() {
+        return lastUpdatedTime;
+    }
+
+    public void updateTime() {
+        lastUpdatedTime = System.currentTimeMillis();
+    }
+
     public void sendMessage(String msg) {
         this.latestMsg = msg;
         this.setMsgCount(this.getMsgCount() + 1);
@@ -58,6 +68,7 @@ public class SingleUser extends User implements Subject {
             positiveMsgs++;
         }
 
+        updateTime();
         notifyObservers();
     }
 
@@ -75,6 +86,7 @@ public class SingleUser extends User implements Subject {
 
     public void update(Subject subject) {
         newsFeed.add(0, (((SingleUser) subject).getID() + ": " + ((SingleUser) subject).getLatestMessage()));
+        updateTime();
     }
 
     public void attach(Observer observer) {
